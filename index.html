@@ -39,7 +39,7 @@
   <body class="bg-lightBackground text-lightText dark:bg-darkBackground dark:text-darkText">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
-    <script src="main.js"></script>
+  //  <script src="main.js"></script>
     
     !-- Load UserScripts -->
     <script src="userscripts.js"></script>
@@ -49,6 +49,17 @@
     // Initialize Eruda
     eruda.init();
 </script>
+
+// Service Worker Registration (if you have one)
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/sw.js').then(function(registration) {
+      console.log('ServiceWorker registration successful');
+    }, function(err) {
+      console.log('ServiceWorker registration failed: ', err);
+    });
+  });
+}
     
   </body>
 </html>
