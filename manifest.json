@@ -1,7 +1,9 @@
 {
   "name": "Workout Tracker1",
   "short_name": "RyBy WOD",
-  "start_url": "/",
+ // "start_url": "/",
+  "start_url": "./",  // Use a relative URL
+  "scope": "./",  // Make sure scope is relative
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#000000",
