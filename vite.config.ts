@@ -1,36 +1,63 @@
 import { defineConfig } from 'vite';
-    import react from '@vitejs/plugin-react';
-    import path from 'path';
-    
-    // https://vitejs.dev/config/
-    export default defineConfig({
-      plugins: [react()],
-      resolve: {
-        alias: {
-          '@lib': path.resolve(__dirname, 'src/lib'),
-          '@components': path.resolve(__dirname, 'src/components'),
-        },
+import react from '@vitejs/plugin-react';
+import { VitePWA } from 'vite-plugin-pwa';
+import path from 'path';
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [
+    react(),
+    VitePWA({
+      registerType: 'autoUpdate',
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,svg,png,ico,txt}']
       },
-      optimizeDeps: {
-        exclude: ['lucide-react'],
-      },
-      server: {
-        proxy: {
-          '/api/manifest': {
-            target: 'http://localhost:5173',
-            changeOrigin: true,
-            rewrite: (path) => path.replace(/^\/api\/manifest/, '/manifest.json'),
+      manifest: {
+        name: 'Workout Tracker',
+        short_name: 'Workout',
+        description: 'Your workout tracking application',
+        theme_color: '#ffffff',
+        icons: [
+          {
+            src: '/icon-192x192.png',
+            sizes: '192x192',
+            type: 'image/png'
           },
+          {
+            src: '/icon-512x512.png',
+            sizes: '512x512',
+            type: 'image/png'
+          }
+        ]
+      }
+    })
+  ],
+  resolve: {
+    alias: {
+      '@lib': path.resolve(__dirname, 'src/lib'),
+      '@components': path.resolve(__dirname, 'src/components'),
+    },
+  },
+  optimizeDeps: {
+    exclude: ['lucide-react'],
+  },
+  server: {
+    proxy: {
+      '/api/manifest': {
+        target: 'http://localhost:5173',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/manifest/, '/manifest.json'),
+      },
+    },
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-router-dom': ['react-router-dom'],
+          'react': ['react', 'react-dom'],
         },
       },
-      build: {
-        rollupOptions: {
-          output: {
-            manualChunks: {
-              'react-router-dom': ['react-router-dom'],
-              'react': ['react', 'react-dom'],
-            },
-          },
-        },
-      },
-    });
+    },
+  },
+});
