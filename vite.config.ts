@@ -8,7 +8,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      injectRegister: 'auto', // This helps with automatic registration
+      injectRegister: 'auto',
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,ico,txt}']
       },
@@ -22,21 +22,52 @@ export default defineConfig({
         start_url: '/',
         icons: [
           {
-            src: '/icons/icon-192x192.png', // Updated path
+            src: '/icons/icon-192x192.png',
             sizes: '192x192',
             type: 'image/png'
           },
           {
-            src: '/icons/icon-512x512.png', // Updated path
+            src: '/icons/icon-512x512.png',
             sizes: '512x512',
             type: 'image/png'
           }
         ]
       },
       devOptions: {
-        enabled: true // Enable for debugging
+        enabled: true
       }
     })
   ],
-  // ... rest of your configuration remains the same
+  resolve: {
+    alias: {
+      '@lib': path.resolve(__dirname, 'src/lib'),
+      '@components': path.resolve(__dirname, 'src/components'),
+    },
+    // Add this to help with build-time resolution
+    conditions: ['import', 'module', 'browser', 'default']
+  },
+  optimizeDeps: {
+    exclude: ['lucide-react'],
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-router-dom': ['react-router-dom'],
+          'react': ['react', 'react-dom'],
+        },
+      },
+      // Add this to resolve the import issue
+      external: ['@lib/supabase']
+    },
+  },
+  server: {
+    proxy: {
+      '/api/manifest': {
+        target: 'http://localhost:5173',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/manifest/, '/manifest.json'),
+      },
+    },
+  },
 });
