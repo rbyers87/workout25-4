@@ -28,3 +28,15 @@ createRoot(document.getElementById('root')!).render(
     <App />
   </StrictMode>
 );
+
+// service worker logs
+
+if ('serviceWorker' in navigator) {
+  console.log('Service Worker is supported');
+  
+  navigator.serviceWorker.ready.then(registration => {
+    console.log('Service Worker Registered:', registration);
+  }).catch(error => {
+    console.error('Service Worker Registration Error:', error);
+  });
+}
