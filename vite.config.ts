@@ -43,7 +43,6 @@ export default defineConfig({
       '@lib': path.resolve(__dirname, 'src/lib'),
       '@components': path.resolve(__dirname, 'src/components'),
     },
-    // Add this to help with build-time resolution
     conditions: ['import', 'module', 'browser', 'default']
   },
   optimizeDeps: {
@@ -57,8 +56,6 @@ export default defineConfig({
           'react': ['react', 'react-dom'],
         },
       },
-      // Add this to resolve the import issue
-      external: ['@lib/supabase']
     },
   },
   server: {
